@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package format="2">
+  <name>mecanum_drive</name>
+  <version>1.0.0</version>
+  <description>
+    This package implements a control mechanism for a mecanum drive robot.
+  </description>
+  <author>David Dudas</author>
+  <maintainer email="david.dudas@outlook.com">David Dudas</maintainer>
+  <url type="website">https://github.com/dudasdavid/mecanum_drive</url>
+  <url type="repository">https://github.com/dudasdavid/mecanum_drive.git</url>
+  <url type="bugtracker">https://github.com/dudasdavid/mecanum_drive/issues</url>
+  <license>BSD</license>
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <depend>std_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>actionlib_msgs</depend>
+  <build_depend>rostest</build_depend>
+  <depend>message_generation</depend>
+  
+</package>
