@@ -47,6 +47,7 @@ class OdometryNode:
 
         self.ticksPerMeter = int(rospy.get_param('~ticks_per_meter'))
         self.wheelSeparation = float(rospy.get_param('~wheel_separation'))
+        self.wheelSeparationLength = float(rospy.get_param('~wheel_separation_length'))
         self.rate = float(rospy.get_param('~rate', 20.0))
         self.baseFrameID = rospy.get_param('~base_frame_id', 'base_link')
         self.odomFrameID = rospy.get_param('~odom_frame_id', 'odom')
@@ -54,6 +55,7 @@ class OdometryNode:
         self.encoderMax = int(rospy.get_param('~encoder_max', 32767))
 
         self.odometry.setWheelSeparation(self.wheelSeparation)
+        self.odometry.setWheelSeparationLength(self.wheelSeparationLength)
         self.odometry.setTicksPerMeter(self.ticksPerMeter)
         self.odometry.setEncoderRange(self.encoderMin, self.encoderMax)
         self.odometry.setTime(rospy.get_time())

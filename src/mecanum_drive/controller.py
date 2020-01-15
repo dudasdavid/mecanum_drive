@@ -25,8 +25,8 @@ class Controller:
     
         # print(linearXSpeed,linearYSpeed,angularSpeed)
     
-        WHEEL_SEPARATION_WIDTH = 0.1
-        WHEEL_SEPARATION_LENGTH = 0.13
+        WHEEL_SEPARATION_WIDTH = self.wheelSeparation
+        WHEEL_SEPARATION_LENGTH = self.wheelSeparationLength
         
         speeds = MotorCommand()
         
@@ -53,7 +53,10 @@ class Controller:
         return speeds
 
     def setWheelSeparation(self, separation):
-        self.wheelSeparation = separation
+        self.wheelSeparation = separation 
+        
+    def setWheelSeparationLength(self, separation):
+        self.wheelSeparationLength = separation
 
     def setMaxMotorSpeed(self, limit):
         self.maxMotorSpeed = limit

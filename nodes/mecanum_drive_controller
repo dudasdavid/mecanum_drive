@@ -28,11 +28,13 @@ class ControllerNode:
 
         self.ticksPerMeter = float(rospy.get_param('~ticks_per_meter'))
         self.wheelSeparation = float(rospy.get_param('~wheel_separation'))
+        self.wheelSeparationLength = float(rospy.get_param('~wheel_separation_length'))
         self.maxMotorSpeed = int(rospy.get_param('~max_motor_speed'))
         self.rate = float(rospy.get_param('~rate', 10.0))
         self.timeout = float(rospy.get_param('~timeout', 0.2))
 
         self.controller.setWheelSeparation(self.wheelSeparation)
+        self.controller.setWheelSeparationLength(self.wheelSeparationLength)
         self.controller.setTicksPerMeter(self.ticksPerMeter)
         self.controller.setMaxMotorSpeed(self.maxMotorSpeed)
 

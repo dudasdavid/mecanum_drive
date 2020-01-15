@@ -17,6 +17,9 @@ class Odometry:
     def setWheelSeparation(self, separation):
         self.wheelSeparation = separation
 
+    def setWheelSeparationLength(self, separation):
+        self.wheelSeparationLength = separation
+
     def setTicksPerMeter(self, ticks):
         self.ticksPerMeter = ticks
         
