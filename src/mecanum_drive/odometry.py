@@ -50,12 +50,12 @@ class Odometry:
         rearRightTravel = self.rearRightEncoder.getDelta() / self.ticksPerMeter
         deltaTime = newTime - self.lastTime
 
-        deltaXTravel = (frontLeftTravel + frontRightTravel + rearLeftTravel + rearRightTravel) / 4
-        deltaYTravel = (-frontLeftTravel + frontRightTravel + rearLeftTravel - rearRightTravel) / 4
-        deltaTheta = (-frontLeftTravel + frontRightTravel - rearLeftTravel + rearRightTravel) / (4 * self.wheelSeparation + self.wheelSeparationLength)
+        deltaXTravel = (frontLeftTravel + frontRightTravel + rearLeftTravel + rearRightTravel) / 4.0
+        deltaYTravel = (-frontLeftTravel + frontRightTravel + rearLeftTravel - rearRightTravel) / 4.0
+        deltaTheta = (-frontLeftTravel + frontRightTravel - rearLeftTravel + rearRightTravel) / (2 * (self.wheelSeparation + self.wheelSeparationLength))
 
-        self.pose.x += deltaXTravel
-        self.pose.y += deltaYTravel
+        self.pose.x += deltaXTravel*cos(self.pose.theta) - deltaYTravel*sin(self.pose.theta)
+        self.pose.y += deltaYTravel*cos(self.pose.theta) + deltaXTravel*sin(self.pose.theta)
         self.pose.theta = (self.pose.theta + deltaTheta) % (2*pi)
         self.pose.xVel = deltaXTravel / deltaTime if deltaTime > 0 else 0.
         self.pose.yVel = deltaYTravel / deltaTime if deltaTime > 0 else 0.
