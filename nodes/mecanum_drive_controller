@@ -3,7 +3,7 @@ from __future__ import division
 
 import rospy
 from geometry_msgs.msg import Twist
-from std_msgs.msg import Int16, Int16MultiArray
+from std_msgs.msg import Int16MultiArray
 
 from mecanum_drive import controller
 

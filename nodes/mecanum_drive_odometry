@@ -5,7 +5,7 @@ import rospy
 from geometry_msgs.msg import Quaternion
 from geometry_msgs.msg import Twist
 from nav_msgs.msg import Odometry
-from std_msgs.msg import Int32
+from std_msgs.msg import Int16MultiArray
 from geometry_msgs.msg import PoseWithCovarianceStamped
 from tf.broadcaster import TransformBroadcaster
 from tf.transformations import quaternion_from_euler, euler_from_quaternion
@@ -40,8 +40,7 @@ class OdometryNode:
         self.nodeName = rospy.get_name()
         rospy.loginfo("{0} started".format(self.nodeName))
 
-        rospy.Subscriber("lwheel_ticks", Int32, self.leftCallback)
-        rospy.Subscriber("rwheel_ticks", Int32, self.rightCallback)
+        rospy.Subscriber("wheel_ticks", Int16MultiArray, self.ticksCallback)
         rospy.Subscriber("initialpose", PoseWithCovarianceStamped,
                          self.on_initial_pose)
 
@@ -110,11 +109,9 @@ class OdometryNode:
         rospy.loginfo('Setting initial pose to %s', pose)
         self.odometry.setPose(pose)
 
-    def leftCallback(self, msg):
-        self.odometry.updateLeftWheel(msg.data)
+    def ticksCallback(self, msg):
+        self.odometry.updateWheels(msg.data[0],msg.data[1],msg.data[2],msg.data[3])
 
-    def rightCallback(self, msg):
-        self.odometry.updateRightWheel(msg.data)
 
 
 if __name__ == '__main__':

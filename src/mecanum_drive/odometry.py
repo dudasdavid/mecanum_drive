@@ -9,8 +9,10 @@ class Odometry:
     """
 
     def __init__(self):
-        self.leftEncoder = Encoder()
-        self.rightEncoder = Encoder()
+        self.frontLeftEncoder = Encoder()
+        self.frontRightEncoder = Encoder()
+        self.rearLeftEncoder = Encoder()
+        self.rearRightEncoder = Encoder()
         self.pose = Pose()
         self.lastTime = 0
 
@@ -24,53 +26,39 @@ class Odometry:
         self.ticksPerMeter = ticks
         
     def setEncoderRange(self, low, high):
-        self.leftEncoder.setRange(low, high)
-        self.rightEncoder.setRange(low, high)
+        self.frontLeftEncoder.setRange(low, high)
+        self.frontRightEncoder.setRange(low, high)
+        self.rearLeftEncoder.setRange(low, high)
+        self.rearRightEncoder.setRange(low, high)
 
     def setTime(self, newTime):
         self.lastTime = newTime
         
-    def updateLeftWheel(self, newCount):
-        self.leftEncoder.update(newCount)
-
-    def updateRightWheel(self, newCount):
-        self.rightEncoder.update(newCount)
+    def updateWheels(self, fl, fr, rl, rr):
+        self.frontLeftEncoder.update(fl)
+        self.frontRightEncoder.update(fr)        
+        self.rearLeftEncoder.update(rl)        
+        self.rearRightEncoder.update(rr)        
 
     def updatePose(self, newTime):
         """Updates the pose based on the accumulated encoder ticks
-        of the two wheels. See https://chess.eecs.berkeley.edu/eecs149/documentation/differentialDrive.pdf
-        for details.
+        of the four mecanum wheels.
         """
-        leftTravel = self.leftEncoder.getDelta() / self.ticksPerMeter
-        rightTravel = self.rightEncoder.getDelta() / self.ticksPerMeter
+        frontLeftTravel = self.frontLeftEncoder.getDelta() / self.ticksPerMeter
+        frontRightTravel = self.frontRightEncoder.getDelta() / self.ticksPerMeter
+        rearLeftTravel = self.rearLeftEncoder.getDelta() / self.ticksPerMeter
+        rearRightTravel = self.rearRightEncoder.getDelta() / self.ticksPerMeter
         deltaTime = newTime - self.lastTime
 
-        deltaTravel = (rightTravel + leftTravel) / 2
-        deltaTheta = (rightTravel - leftTravel) / self.wheelSeparation
+        deltaXTravel = (frontLeftTravel + frontRightTravel + rearLeftTravel + rearRightTravel) / 4
+        deltaYTravel = (-frontLeftTravel + frontRightTravel + rearLeftTravel - rearRightTravel) / 4
+        deltaTheta = (-frontLeftTravel + frontRightTravel - rearLeftTravel + rearRightTravel) / (4 * self.wheelSeparation + self.wheelSeparationLength)
 
-        if rightTravel == leftTravel:
-            deltaX = leftTravel*cos(self.pose.theta)
-            deltaY = leftTravel*sin(self.pose.theta)
-        else:
-            radius = deltaTravel / deltaTheta
-
-            # Find the instantaneous center of curvature (ICC).
-            iccX = self.pose.x - radius*sin(self.pose.theta)
-            iccY = self.pose.y + radius*cos(self.pose.theta)
-
-            deltaX = cos(deltaTheta)*(self.pose.x - iccX) \
-                - sin(deltaTheta)*(self.pose.y - iccY) \
-                + iccX - self.pose.x
-
-            deltaY = sin(deltaTheta)*(self.pose.x - iccX) \
-                + cos(deltaTheta)*(self.pose.y - iccY) \
-                + iccY - self.pose.y
-
-        self.pose.x += deltaX
-        self.pose.y += deltaY
+        self.pose.x += deltaXTravel
+        self.pose.y += deltaYTravel
         self.pose.theta = (self.pose.theta + deltaTheta) % (2*pi)
-        self.pose.xVel = deltaTravel / deltaTime if deltaTime > 0 else 0.
-        self.pose.yVel = 0
+        self.pose.xVel = deltaXTravel / deltaTime if deltaTime > 0 else 0.
+        self.pose.yVel = deltaYTravel / deltaTime if deltaTime > 0 else 0.
         self.pose.thetaVel = deltaTheta / deltaTime if deltaTime > 0 else 0.
 
         self.lastTime = newTime
