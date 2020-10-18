@@ -52,6 +52,7 @@ class OdometryNode:
         self.odomFrameID = rospy.get_param('~odom_frame_id', 'odom')
         self.encoderMin = int(rospy.get_param('~encoder_min', -32768))
         self.encoderMax = int(rospy.get_param('~encoder_max', 32767))
+        self.publishTF = rospy.get_param('~publish_tf', 'true')
 
         self.odometry.setWheelSeparation(self.wheelSeparation)
         self.odometry.setWheelSeparationLength(self.wheelSeparationLength)
@@ -70,13 +71,16 @@ class OdometryNode:
         pose = self.odometry.getPose()
 
         q = quaternion_from_euler(0, 0, pose.theta)
-        self.tfPub.sendTransform(
-            (pose.x, pose.y, 0),
-            (q[0], q[1], q[2], q[3]),
-            now,
-            self.baseFrameID,
-            self.odomFrameID
-        )
+        
+        if self.publishTF == 'true':
+            self.tfPub.sendTransform(
+                (pose.x, pose.y, 0),
+                (q[0], q[1], q[2], q[3]),
+                now,
+                self.baseFrameID,
+                self.odomFrameID
+            )
+        
 
         odom = Odometry()
         odom.header.stamp = now
