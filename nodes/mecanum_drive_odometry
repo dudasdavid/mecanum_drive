@@ -13,19 +13,19 @@ from math import sin, cos
 from mecanum_drive.pose import Pose
 from mecanum_drive import odometry
 
-ODOM_POSE_COVARIANCE = [1e-3, 0, 0, 0, 0, 0, 
-                        0, 1e-3, 0, 0, 0, 0,
-                        0, 0, 1e6, 0, 0, 0,
-                        0, 0, 0, 1e6, 0, 0,
-                        0, 0, 0, 0, 1e6, 0,
-                        0, 0, 0, 0, 0, 1e3]
+ODOM_POSE_COVARIANCE = [1, 0, 0, 0, 0, 0, 
+                        0, 1, 0, 0, 0, 0,
+                        0, 0, 1, 0, 0, 0,
+                        0, 0, 0, 99999.0, 0, 0,
+                        0, 0, 0, 0, 99999.0, 0,
+                        0, 0, 0, 0, 0, 1]
 
-ODOM_TWIST_COVARIANCE = [1e-3, 0, 0, 0, 0, 0, 
-                         0, 1e-3, 0, 0, 0, 0,
-                         0, 0, 1e6, 0, 0, 0,
-                         0, 0, 0, 1e6, 0, 0,
-                         0, 0, 0, 0, 1e6, 0,
-                         0, 0, 0, 0, 0, 1e3]
+ODOM_TWIST_COVARIANCE = [1, 0, 0, 0, 0, 0, 
+                         0, 1, 0, 0, 0, 0,
+                         0, 0, 1, 0, 0, 0,
+                         0, 0, 0, 99999.0, 0, 0,
+                         0, 0, 0, 0, 99999.0, 0,
+                         0, 0, 0, 0, 0, 1]
 
 class OdometryNode:
 
